@@ -1,0 +1,19 @@
+---
+# tasks file for logstash_forwarder (Ubuntu specific)
+
+- name: Install Elasticsearch PGP key
+  apt_key: >
+    url=https://packages.elastic.co/GPG-KEY-elasticsearch
+    state=present
+  tags: logstash_forwarder
+
+- name: Add Logstash Forwarder repository
+  apt_repository: >
+    repo='deb http://packages.elasticsearch.org/logstashforwarder/debian stable main'
+    state=present
+  tags: logstash_forwarder
+
+- name: Install Logstash Forwarder packages
+  apt: name={{ item }} state=present update_cache=yes
+  with_items: logstash_forwarder_packages
+  tags: logstash_forwarder

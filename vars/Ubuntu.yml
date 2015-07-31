@@ -1,0 +1,10 @@
+---
+# vars file for logstash_forwarder (Ubuntu specific)
+
+logstash_forwarder_packages:
+  - logstash-forwarder={{ logstash_forwarder_version }}
+logstash_forwarder_service_name: logstash-forwarder
+logstash_forwarder_user: root
+logstash_forwarder_group: root
+logstash_forwarder_chroot: /
+logstash_forwarder_chdir: /var/lib/logstash-forwarder

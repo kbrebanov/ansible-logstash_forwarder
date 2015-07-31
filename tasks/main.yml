@@ -1,2 +1,41 @@
 ---
 # tasks file for logstash_forwarder
+
+- name: Include distribution specific variables
+  include_vars: "{{ ansible_distribution }}.yml"
+  tags: logstash_forwarder
+
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags: logstash_forwarder
+
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags: logstash_forwarder
+
+- name: Create Logstash Forwarder defaults file
+  template: >
+    src=logstash-forwarder.default.j2
+    dest=/etc/default/logstash-forwarder
+    owner=root
+    group=root
+    mode=0664
+  notify: restart logstash forwarder
+  tags: logstash_forwarder
+
+- name: Create Logstash Forwarder configuration
+  template: >
+    src=logstash-forwarder.conf.j2
+    dest=/etc/logstash-forwarder.conf
+    owner=root
+    group=root
+    mode=0664
+  notify: restart logstash forwarder
+  tags: logstash_forwarder
+
+- name: Ensure Logstash Forwarder service is started and enabled on boot
+  service: >
+    name={{ logstash_forwarder_service_name }}
+    state=started
+    enabled=yes
+  tags: logstash_forwarder

@@ -1,31 +1,56 @@
-Role Name
-=========
+logstash_forwarder
+==================
 
-A brief description of the role goes here.
+Installs and configures Logstash Forwarder
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role requires Ansible 1.4 or higher.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+| Name                                | Default                                                       | Description                              |
+|-------------------------------------|---------------------------------------------------------------|------------------------------------------|
+| logstash_forwarder_version          | 0.4.0                                                         | Version of Logstash Forwarder to install |
+| logstash_forwarder_nice             | 0                                                             | Nice value of Logstash Forwarder process |
+| logstash_forwarder_network_servers  | [ "localhost:5043" ]                                          | List of downstream servers               |
+| logstash_forwarder_network_ssl_cert | ''                                                            | Path to SSL certificate file             |
+| logstash_forwarder_network_ssl_key  | ''                                                            | Path to SSL key file                     |
+| logstash_forwarder_network_ssl_ca   | ''                                                            | Path to trusted SSL CA file              |
+| logstash_forwarder_network_timeout  | 15                                                            | Network timeout in seconds               |
+| logstash_forwarder_files            | [ paths: [ "/var/log/messages" ], fields: { type: "syslog"} ] | List of files to watch                   |
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+Install Logstash Forwarder specifying list of files to watch
+```
+- hosts: all
+  vars:
+    logstash_forwarder_files:
+      - paths:
+          - /var/log/messages
+          - /var/log/*.log
+        fields:
+          type: syslog
+      - paths:
+          - "-"
+        fields:
+          type: stdin
+      - paths:
+          - /var/log/apache/httpd-*.log
+        fields:
+          type: apache
+  roles:
+    - { role: kbrebanov.logstash_forwarder }
+```
 
 License
 -------
@@ -35,4 +60,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Kevin Brebanov

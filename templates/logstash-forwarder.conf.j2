@@ -1,0 +1,34 @@
+{
+  # The network section covers network configuration :)
+  "network": {
+    # A list of downstream servers listening for our messages.
+    # logstash-forwarder will pick one at random and only switch if
+    # the selected one appears to be dead or unresponsive
+    "servers": {{ logstash_forwarder_network_servers | to_json }},
+
+    {% if logstash_forwarder_network_ssl_cert != '' -%}
+    # The path to your client ssl certificate (optional)
+    "ssl certificate": "{{ logstash_forwarder_network_ssl_cert }}",
+    {% endif -%}
+    {% if logstash_forwarder_network_ssl_key != '' -%}
+    # The path to your client ssl key (optional)
+    "ssl key": "{{ logstash_forwarder_network_ssl_key }}",
+    {% endif -%}
+
+    {% if logstash_forwarder_network_ssl_ca != '' -%}
+    # The path to your trusted ssl CA file. This is used
+    # to authenticate your downstream server.
+    "ssl ca": "{{ logstash_forwarder_network_ssl_ca }}",
+    {% endif -%}
+
+    # Network timeout in seconds. This is most important for
+    # logstash-forwarder determining whether to stop waiting for an
+    # acknowledgement from the downstream server. If an timeout is reached,
+    # logstash-forwarder will assume the connection or server is bad and
+    # will connect to a server chosen at random from the servers list.
+    "timeout": {{ logstash_forwarder_network_timeout }}
+  },
+
+  # The list of files configurations
+  "files": {{ logstash_forwarder_files | to_nice_json }}
+}

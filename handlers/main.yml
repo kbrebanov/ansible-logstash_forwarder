@@ -1,2 +1,6 @@
 ---
 # handlers file for logstash_forwarder
+
+- name: restart logstash forwarder
+  service: name={{ logstash_forwarder_service_name }} state=restarted
+  tags: logstash_forwarder

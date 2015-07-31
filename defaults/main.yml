@@ -1,2 +1,17 @@
 ---
 # defaults file for logstash_forwarder
+
+logstash_forwarder_version: 0.4.0
+logstash_forwarder_nice: 0
+logstash_forwarder_network_servers:
+  - localhost:5043
+logstash_forwarder_network_ssl_cert: ''
+logstash_forwarder_network_ssl_key: ''
+logstash_forwarder_network_ssl_ca: ''
+logstash_forwarder_network_timeout: 15
+
+logstash_forwarder_files:
+  - paths:
+      - "/var/log/messages"
+    fields:
+      type: syslog
